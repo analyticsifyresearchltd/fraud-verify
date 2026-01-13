@@ -1,23 +1,36 @@
-async function getScore(){
- let score = 0
- let flags = []
+window.computeScore = function(){
+  let s = 0;
 
- if(fraudData.mouse < 40){score+=20;flags.push("low_mouse")}
- if(fraudData.keys < 10){score+=15;flags.push("low_keys")}
- if(fraudData.scrolls < 1){score+=10;flags.push("no_scroll")}
- if(fraudData.tabs > 0){score+=15;flags.push("tab_switch")}
+  // Human motor behavior
+  if(fraud.mouseMoves > 60) s += 10; else s -= 10;
+  if(fraud.clicks > 3) s += 10;
+  if(fraud.keys > 25) s += 10;
+  if(fraud.scrolls > 2) s += 10;
 
- let a = window.humanAnswers || {}
+  // Time on portal
+  const t = (Date.now() - fraud.start)/1000;
+  if(t > 35) s += 10; else s -= 10;
 
- if(a.q2 !== "idea"){score+=20;flags.push("concept_fail")}
- if(a.q3 === "yes"){score+=30;flags.push("fake_location")}
- if(a.q4 === "defnot"){score+=30;flags.push("logic_fail")}
+  // Tab switching / multitabbing
+  if(fraud.focusLoss > 0) s -= 15;
 
- if(!a.q5 || a.q5.split(" ").length < 8){score+=25;flags.push("short_text")}
+  // Copy-paste detection
+  if(fraud.pasteEvents > 0) s -= 25;
 
- let vpn = await checkVPN()
- if(vpn.bad){score+=30;flags.push("vpn")}
+  // Logic traps (Q2–Q5)
+  if(window.humanAnswers){
+    if(humanAnswers.q2 === "idea") s += 10; else s -= 20;
+    if(humanAnswers.q3 === "no") s += 5; else s -= 10;
+    if(humanAnswers.q4 === "yes") s += 5;
+    if((humanAnswers.q5||"").split(" ").length > 7) s += 10; else s -= 15;
+  }
 
- return {score,flags}
-}
-window.getScore = getScore
+  // VPN / proxy penalty
+  s -= window.vpnScore;
+
+  // Repeat-farm blocking
+  const prev = localStorage.getItem("fp");
+  if(prev && prev === window.fp) s -= 20;
+
+  return s;
+};
