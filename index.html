@@ -2,162 +2,104 @@
 <html>
 <head>
 <meta charset="utf-8">
-<title>Survey Verification</title>
+<title>Survey</title>
 
 <style>
-body{
-  margin:0;
-  background:#e6e6e6;
-  font-family: Arial, Helvetica, sans-serif;
-}
-
-#container{
-  width:900px;
-  margin:40px auto;
-}
-
-#card{
-  background:#fff;
-  border-radius:6px;
-  padding:25px 30px;
-  box-shadow:0 0 10px rgba(0,0,0,.15);
-}
-
-h2{
-  margin-top:0;
-  font-size:20px;
-}
-
-.option{
-  border:1px solid #ccc;
-  padding:12px;
-  margin:8px 0;
-  cursor:pointer;
-  border-radius:4px;
-}
-.option:hover{
-  background:#f3f3f3;
-}
-
-textarea{
-  width:100%;
-  height:100px;
-  padding:10px;
-  font-size:15px;
-}
-
-#footer{
-  margin-top:20px;
-  display:flex;
-  justify-content:space-between;
-}
-
-.btn{
-  background:#f4a000;
-  border:none;
-  color:#fff;
-  padding:12px 25px;
-  font-size:14px;
-  border-radius:4px;
-  cursor:pointer;
-}
-.btn:disabled{
-  opacity:.5;
-}
-
-.q{display:none;}
-.q.active{display:block;}
+body{background:#dcdcdc;font-family:Arial;margin:0}
+#wrapper{width:900px;margin:40px auto}
+#card{background:#fff;border-radius:6px;box-shadow:0 8px 20px rgba(0,0,0,.3);padding:20px}
+.qid{background:#e5e5e5;display:inline-block;padding:4px 10px;border-radius:4px;font-size:12px;margin-bottom:10px}
+.question{font-size:20px;margin:10px 0 20px 0}
+.row{border-top:1px dotted #aaa;padding:12px;cursor:pointer}
+.row:hover{background:#f4f4f4}
+textarea{width:100%;height:120px;border:1px solid #ccc;padding:10px}
+#footer{border-top:2px solid #f0a000;margin-top:20px;padding-top:20px;display:flex;justify-content:flex-end}
+.btn{background:#f4a000;color:white;border:none;padding:12px 30px;font-size:15px;border-radius:4px;cursor:pointer}
+.page{display:none}
+.page.active{display:block}
+.hidden{display:none}
 </style>
 </head>
 
 <body>
+<div id="wrapper"><div id="card">
 
-<div id="container">
-  <div id="card">
-
-    <div id="q1" class="q active">
-      <h2>Welcome to our Market Research Survey!</h2>
-      <p>
-      The next few questions ask about your knowledge of the world, and your understanding of words.
-      </p>
-      <p>
-      For each question, please pick the answer that seems most correct to you.
-      </p>
-    </div>
-
-    <div id="q2" class="q">
-      <h2>Concept is most associated with</h2>
-      <div class="option" onclick="ans('q2','rim')">rim</div>
-      <div class="option" onclick="ans('q2','hunter')">hunter</div>
-      <div class="option" onclick="ans('q2','idea')">idea</div>
-      <div class="option" onclick="ans('q2','ridge')">ridge</div>
-      <p>Please select an answer to continue</p>
-    </div>
-
-    <div id="q3" class="q">
-      <h2>Are you a current resident of Beach Hill, Nebraska?</h2>
-      <div class="option" onclick="ans('q3','yes')">Yes</div>
-      <div class="option" onclick="ans('q3','no')">No</div>
-      <p>Please select an answer to continue</p>
-    </div>
-
-    <div id="q4" class="q">
-      <h2>Have you ever used a phone to call someone?</h2>
-      <div class="option" onclick="ans('q4','yes')">Yes</div>
-      <div class="option" onclick="ans('q4','no')">No</div>
-      <div class="option" onclick="ans('q4','unsure')">Unsure</div>
-      <div class="option" onclick="ans('q4','defnot')">Definitely Not</div>
-      <p>Please select an answer to continue</p>
-    </div>
-
-    <div id="q5" class="q">
-      <h2>
-      In at least one full sentence, please name a common household pet, and describe why people like them.
-      </h2>
-      <textarea id="pet" placeholder="Please enter your answer and press Enter"></textarea>
-    </div>
-
-    <div id="footer">
-      <button class="btn">Answer for me</button>
-      <button class="btn" id="nextBtn" onclick="next()">NEXT</button>
-    </div>
-
+<!-- Q1 -->
+<div id="p1" class="page active">
+  <div class="qid">[Q1]</div>
+  <div class="question">
+    The next few questions ask about your knowledge of the world, and your understanding of words.<br><br>
+    For each question, please pick the answer that seems most correct to you.
   </div>
 </div>
+
+<!-- Q2 -->
+<div id="p2" class="page">
+  <div class="qid">[Q2]</div>
+  <div class="question">Concept is most associated with</div>
+  <div class="row" onclick="ans('q2','rim')">rim</div>
+  <div class="row" onclick="ans('q2','hunter')">hunter</div>
+  <div class="row" onclick="ans('q2','idea')">idea</div>
+  <div class="row" onclick="ans('q2','ridge')">ridge</div>
+</div>
+
+<!-- Q3 -->
+<div id="p3" class="page">
+  <div class="qid">[Q3]</div>
+  <div class="question">Are you a current resident of Beach Hill, Nebraska?</div>
+  <div class="row" onclick="ans('q3','yes')">Yes</div>
+  <div class="row" onclick="ans('q3','no')">No</div>
+</div>
+
+<!-- Q4 -->
+<div id="p4" class="page">
+  <div class="qid">[Q4]</div>
+  <div class="question">Have you ever used a phone to call someone?</div>
+  <div class="row" onclick="ans('q4','yes')">Yes</div>
+  <div class="row" onclick="ans('q4','no')">No</div>
+  <div class="row" onclick="ans('q4','unsure')">Unsure</div>
+  <div class="row" onclick="ans('q4','defnot')">Definitely Not</div>
+</div>
+
+<!-- Q5 -->
+<div id="p5" class="page">
+  <div class="qid">[Q5]</div>
+  <div class="question">
+    In at least one full sentence, please name a common household pet, and describe why people like them.
+  </div>
+  <textarea id="pet"></textarea>
+</div>
+
+<div id="footer">
+  <button id="nextBtn" class="btn" onclick="next()">NEXT</button>
+</div>
+
+</div></div>
+
+<script>
+let p=1,answers={}
+function show(n){
+ document.querySelectorAll('.page').forEach(x=>x.classList.remove("active"))
+ document.getElementById("p"+n).classList.add("active")
+ document.getElementById("nextBtn").style.display = (n==1 || n==5) ? "inline-block" : "none"
+}
+function next(){
+ if(p<5){p++;show(p)}
+ else{
+  answers.q5=document.getElementById("pet").value
+  window.humanAnswers=answers
+ }
+}
+function ans(q,v){
+ answers[q]=v
+ p++; show(p)
+}
+</script>
 
 <script src="fraud.js"></script>
 <script src="vpn.js"></script>
 <script src="score.js"></script>
 <script src="redirect.js"></script>
-
-<script>
-let page = 1
-let answers = {}
-
-function show(n){
-  document.querySelectorAll('.q').forEach(x=>x.classList.remove("active"))
-  document.getElementById("q"+n).classList.add("active")
-}
-
-function next(){
-  if(page === 1){
-    page=2; show(2); return
-  }
-}
-
-function ans(q,v){
-  answers[q]=v
-  page++
-  show(page)
-}
-
-document.getElementById("pet").addEventListener("keydown",e=>{
-  if(e.key==="Enter"){
-    answers.q5 = e.target.value
-    window.humanAnswers = answers
-  }
-})
-</script>
 
 </body>
 </html>
