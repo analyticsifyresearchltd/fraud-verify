@@ -2,53 +2,127 @@
 <html>
 <head>
 <meta charset="utf-8">
-<title>Verification</title>
+<title>Survey Verification</title>
+
 <style>
-body{font-family:Arial;margin:40px}
-.q{display:none}
-.option{padding:10px;border:1px solid #ccc;margin:5px;cursor:pointer}
-.option:hover{background:#eef}
-input,textarea{width:100%;padding:10px;font-size:16px}
+body{
+  margin:0;
+  background:#e6e6e6;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+#container{
+  width:900px;
+  margin:40px auto;
+}
+
+#card{
+  background:#fff;
+  border-radius:6px;
+  padding:25px 30px;
+  box-shadow:0 0 10px rgba(0,0,0,.15);
+}
+
+h2{
+  margin-top:0;
+  font-size:20px;
+}
+
+.option{
+  border:1px solid #ccc;
+  padding:12px;
+  margin:8px 0;
+  cursor:pointer;
+  border-radius:4px;
+}
+.option:hover{
+  background:#f3f3f3;
+}
+
+textarea{
+  width:100%;
+  height:100px;
+  padding:10px;
+  font-size:15px;
+}
+
+#footer{
+  margin-top:20px;
+  display:flex;
+  justify-content:space-between;
+}
+
+.btn{
+  background:#f4a000;
+  border:none;
+  color:#fff;
+  padding:12px 25px;
+  font-size:14px;
+  border-radius:4px;
+  cursor:pointer;
+}
+.btn:disabled{
+  opacity:.5;
+}
+
+.q{display:none;}
+.q.active{display:block;}
 </style>
 </head>
 
 <body>
 
-<div id="q1" class="q" style="display:block">
-<h3>Instructions</h3>
-<p>
-The next few questions ask about your knowledge of the world, and your understanding of words.
-<br><br>
-For each question, please pick the answer that seems most correct to you.
-</p>
-<button onclick="next(2)">Continue</button>
-</div>
+<div id="container">
+  <div id="card">
 
-<div id="q2" class="q">
-<h3>Concept is most associated with</h3>
-<div class="option" onclick="answer('q2','rim')">rim</div>
-<div class="option" onclick="answer('q2','hunter')">hunter</div>
-<div class="option" onclick="answer('q2','idea')">idea</div>
-<div class="option" onclick="answer('q2','ridge')">ridge</div>
-</div>
+    <div id="q1" class="q active">
+      <h2>Welcome to our Market Research Survey!</h2>
+      <p>
+      The next few questions ask about your knowledge of the world, and your understanding of words.
+      </p>
+      <p>
+      For each question, please pick the answer that seems most correct to you.
+      </p>
+    </div>
 
-<div id="q3" class="q">
-<h3>Are you a current resident of Beach Hill, Nebraska?</h3>
-<div class="option" onclick="answer('q3','yes')">Yes</div>
-<div class="option" onclick="answer('q3','no')">No</div>
-</div>
+    <div id="q2" class="q">
+      <h2>Concept is most associated with</h2>
+      <div class="option" onclick="ans('q2','rim')">rim</div>
+      <div class="option" onclick="ans('q2','hunter')">hunter</div>
+      <div class="option" onclick="ans('q2','idea')">idea</div>
+      <div class="option" onclick="ans('q2','ridge')">ridge</div>
+      <p>Please select an answer to continue</p>
+    </div>
 
-<div id="q4" class="q">
-<h3>Have you ever used a phone to call someone?</h3>
-<div class="option" onclick="answer('q4','yes')">Yes</div>
-<div class="option" onclick="answer('q4','no')">No</div>
-<div class="option" onclick="answer('q4','unsure')">Unsure</div>
-<div class="option" onclick="answer('q4','defnot')">Definitely Not</div>
-</div>
+    <div id="q3" class="q">
+      <h2>Are you a current resident of Beach Hill, Nebraska?</h2>
+      <div class="option" onclick="ans('q3','yes')">Yes</div>
+      <div class="option" onclick="ans('q3','no')">No</div>
+      <p>Please select an answer to continue</p>
+    </div>
 
-<div id="q5" class="q">
-<h3>In at least one full sentence, please name a common household pet, and describe why people like them.</h3>
-<textarea id="pet" placeholder="Type your answer and press Enter"></textarea>
+    <div id="q4" class="q">
+      <h2>Have you ever used a phone to call someone?</h2>
+      <div class="option" onclick="ans('q4','yes')">Yes</div>
+      <div class="option" onclick="ans('q4','no')">No</div>
+      <div class="option" onclick="ans('q4','unsure')">Unsure</div>
+      <div class="option" onclick="ans('q4','defnot')">Definitely Not</div>
+      <p>Please select an answer to continue</p>
+    </div>
+
+    <div id="q5" class="q">
+      <h2>
+      In at least one full sentence, please name a common household pet, and describe why people like them.
+      </h2>
+      <textarea id="pet" placeholder="Please enter your answer and press Enter"></textarea>
+    </div>
+
+    <div id="footer">
+      <button class="btn">Answer for me</button>
+      <button class="btn" id="nextBtn" onclick="next()">NEXT</button>
+    </div>
+
+  </div>
 </div>
 
 <script src="fraud.js"></script>
@@ -57,23 +131,31 @@ For each question, please pick the answer that seems most correct to you.
 <script src="redirect.js"></script>
 
 <script>
+let page = 1
 let answers = {}
 
-function next(n){
- document.querySelectorAll('.q').forEach(x=>x.style.display="none")
- document.getElementById("q"+n).style.display="block"
+function show(n){
+  document.querySelectorAll('.q').forEach(x=>x.classList.remove("active"))
+  document.getElementById("q"+n).classList.add("active")
 }
 
-function answer(q,v){
- answers[q]=v
- next(parseInt(q.substring(1))+1)
+function next(){
+  if(page === 1){
+    page=2; show(2); return
+  }
 }
 
-document.getElementById("pet").addEventListener("keydown", e=>{
- if(e.key==="Enter"){
-   answers.q5 = e.target.value
-   window.humanAnswers = answers
- }
+function ans(q,v){
+  answers[q]=v
+  page++
+  show(page)
+}
+
+document.getElementById("pet").addEventListener("keydown",e=>{
+  if(e.key==="Enter"){
+    answers.q5 = e.target.value
+    window.humanAnswers = answers
+  }
 })
 </script>
 
