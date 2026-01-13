@@ -1,14 +1,18 @@
-setTimeout(async ()=>{
- let result = await getScore();
+function sendResult(){
+  const score = computeScore();
+  const verdict = score >= 30 ? "human" : "bot";
 
- let verdict = result.score >= 40 ? "bot" : "human";
+  const back = new URLSearchParams(window.location.search).get("return");
+  if(!back) return;
 
- let params = new URLSearchParams(window.location.search);
- let back = params.get("return");
+  const url = back +
+    "?bf_result=" + verdict +
+    "&bf_score=" + score +
+    "&bf_vpn=" + vpnScore +
+    "&bf_fp=" + (window.fp || "na");
 
- window.location.href =
- back +
- "?bf_result=" + verdict +
- "&bf_score=" + result.score +
- "&bf_flags=" + result.flags.join(",");
-}, 15000);
+  window.location = url;
+}
+
+// Trigger when Q5 NEXT is clicked (page finishes)
+window.addEventListener("beforeunload", sendResult);
