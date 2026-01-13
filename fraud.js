@@ -1,26 +1,10 @@
-let mouseMoves = 0;
-let keyCount = 0;
-let scrolls = 0;
-let tabSwitch = 0;
-let clickedBlue = false;
-let honestyFail = false;
+let mouse=0, keys=0, scrolls=0, tabs=0
 
-document.addEventListener("mousemove", ()=> mouseMoves++);
-document.addEventListener("keydown", ()=> keyCount++);
-document.addEventListener("scroll", ()=> scrolls++);
-window.addEventListener("blur", ()=> tabSwitch++);
-
-document.getElementById("blue").onclick = ()=> clickedBlue=true;
-
-document.getElementById("word").addEventListener("change", e=>{
- if(e.target.value.toLowerCase() !== "runs") honestyFail=true;
-});
+document.addEventListener("mousemove",()=>mouse++)
+document.addEventListener("keydown",()=>keys++)
+document.addEventListener("scroll",()=>scrolls++)
+window.addEventListener("blur",()=>tabs++)
 
 window.fraudData = {
- get mouse(){return mouseMoves},
- get keys(){return keyCount},
- get scroll(){return scrolls},
- get tabs(){return tabSwitch},
- get clicked(){return clickedBlue},
- get honesty(){return honestyFail}
+ mouse, keys, scrolls, tabs
 }
