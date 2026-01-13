@@ -1,10 +1,13 @@
-async function checkVPN(){
- let ip = await fetch("https://ipinfo.io/json").then(r=>r.json());
- let bad = false;
+window.vpnScore = 0;
 
- if(ip.org && ip.org.toLowerCase().includes("hosting")) bad=true;
- if(ip.org && ip.org.toLowerCase().includes("vpn")) bad=true;
+fetch("https://ipinfo.io/json")
+.then(r=>r.json())
+.then(d=>{
+  const org = (d.org||"").toLowerCase();
+  const country = (d.country||"").toLowerCase();
 
- return {bad, ip};
-}
-window.checkVPN = checkVPN;
+  if(org.includes("vpn") || org.includes("hosting") || org.includes("colo")) vpnScore += 40;
+  if(org.includes("google") || org.includes("amazon") || org.includes("azure")) vpnScore += 30;
+  if(country === "ru" || country === "vn") vpnScore += 10;   // common farm geos
+})
+.catch(()=>vpnScore += 20);
