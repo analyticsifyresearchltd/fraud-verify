@@ -1,26 +1,81 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Verification</title>
 <meta charset="utf-8">
+<title>Verification</title>
+<style>
+body{font-family:Arial;margin:40px}
+.q{display:none}
+.option{padding:10px;border:1px solid #ccc;margin:5px;cursor:pointer}
+.option:hover{background:#eef}
+input,textarea{width:100%;padding:10px;font-size:16px}
+</style>
 </head>
-<body>
-<h2>Quick Verification</h2>
-<p>Please complete the short check.</p>
 
-<div id="task">
-Click the <b>blue</b> circle
+<body>
+
+<div id="q1" class="q" style="display:block">
+<h3>Instructions</h3>
+<p>
+The next few questions ask about your knowledge of the world, and your understanding of words.
 <br><br>
-<div id="blue" style="width:60px;height:60px;border-radius:50%;background:blue;"></div>
+For each question, please pick the answer that seems most correct to you.
+</p>
+<button onclick="next(2)">Continue</button>
 </div>
 
-<br>
-<p>Type the 3rd word of this sentence: <b>The dog runs fast</b></p>
-<input id="word">
+<div id="q2" class="q">
+<h3>Concept is most associated with</h3>
+<div class="option" onclick="answer('q2','rim')">rim</div>
+<div class="option" onclick="answer('q2','hunter')">hunter</div>
+<div class="option" onclick="answer('q2','idea')">idea</div>
+<div class="option" onclick="answer('q2','ridge')">ridge</div>
+</div>
+
+<div id="q3" class="q">
+<h3>Are you a current resident of Beach Hill, Nebraska?</h3>
+<div class="option" onclick="answer('q3','yes')">Yes</div>
+<div class="option" onclick="answer('q3','no')">No</div>
+</div>
+
+<div id="q4" class="q">
+<h3>Have you ever used a phone to call someone?</h3>
+<div class="option" onclick="answer('q4','yes')">Yes</div>
+<div class="option" onclick="answer('q4','no')">No</div>
+<div class="option" onclick="answer('q4','unsure')">Unsure</div>
+<div class="option" onclick="answer('q4','defnot')">Definitely Not</div>
+</div>
+
+<div id="q5" class="q">
+<h3>In at least one full sentence, please name a common household pet, and describe why people like them.</h3>
+<textarea id="pet" placeholder="Type your answer and press Enter"></textarea>
+</div>
 
 <script src="fraud.js"></script>
 <script src="vpn.js"></script>
 <script src="score.js"></script>
 <script src="redirect.js"></script>
+
+<script>
+let answers = {}
+
+function next(n){
+ document.querySelectorAll('.q').forEach(x=>x.style.display="none")
+ document.getElementById("q"+n).style.display="block"
+}
+
+function answer(q,v){
+ answers[q]=v
+ next(parseInt(q.substring(1))+1)
+}
+
+document.getElementById("pet").addEventListener("keydown", e=>{
+ if(e.key==="Enter"){
+   answers.q5 = e.target.value
+   window.humanAnswers = answers
+ }
+})
+</script>
+
 </body>
 </html>
