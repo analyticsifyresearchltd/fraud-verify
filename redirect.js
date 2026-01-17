@@ -5,7 +5,7 @@
  *****************************************************************/
 
 const SURVEY_URL =
-  "https://au.focusvision.com/survey/selfserve/6a7/260103";
+  "https://au.focusvision.com/survey/selfserve/6a7/260103?";
 
 /* --------------------------------------------------
    FINAL PAGE CHECK (Q5 ONLY)
@@ -86,3 +86,4 @@ document.addEventListener("click", function (e) {
 
   window.location.href = redirectURL;
 });
+
