@@ -8,9 +8,9 @@ window.fraud = {
   start: Date.now()
 };
 
-document.addEventListener("mousemove",()=>fraud.mouseMoves++);
-document.addEventListener("click",()=>fraud.clicks++);
-document.addEventListener("keydown",()=>fraud.keys++);
-document.addEventListener("scroll",()=>fraud.scrolls++);
-window.addEventListener("blur",()=>fraud.focusLoss++);
-document.addEventListener("paste",()=>fraud.pasteEvents++);
+document.addEventListener("mousemove", () => fraud.mouseMoves++);
+document.addEventListener("click", () => fraud.clicks++);
+document.addEventListener("keydown", () => fraud.keys++);
+document.addEventListener("scroll", () => fraud.scrolls++);
+window.addEventListener("blur", () => fraud.focusLoss++);
+document.addEventListener("paste", () => fraud.pasteEvents++);
