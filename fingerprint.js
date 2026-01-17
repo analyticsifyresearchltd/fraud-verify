@@ -1,4 +1,4 @@
-async function getFingerprint(){
+async function getFingerprint() {
   const canvas = document.createElement("canvas");
   const ctx = canvas.getContext("2d");
   ctx.textBaseline = "top";
@@ -10,10 +10,10 @@ async function getFingerprint(){
   const gpu = gl ? gl.getParameter(gl.RENDERER) : "na";
 
   const data = navigator.userAgent + screen.width + screen.height + gpu + canvasHash;
-  return btoa(data).substring(0,32);
+  return btoa(data).substring(0, 32);
 }
 
-getFingerprint().then(fp=>{
+getFingerprint().then(fp => {
   window.fp = fp;
-  localStorage.setItem("fp",fp);
+  localStorage.setItem("fp", fp);
 });
