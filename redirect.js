@@ -1,18 +1,16 @@
 /*****************************************************************
- * FRAUD VERIFY – GATEWAY MODE (PRODUCTION)
- * Company: Analyticsify Research Ltd.
- * Purpose: Pre-survey human verification
+ * FRAUD VERIFY – GATEWAY MODE (HARDENED)
  *****************************************************************/
 
 const SURVEY_URL =
-  "https://au.focusvision.com/survey/selfserve/6a7/260103?";
+  "https://au.focusvision.com/survey/selfserve/6a7/260103";
 
 /* --------------------------------------------------
-   FINAL PAGE CHECK (Q5 ONLY)
+   Q5 VISIBILITY CHECK
 -------------------------------------------------- */
 function isOnQ5() {
   const q5 = document.getElementById("q5-page");
-  return q5 && q5.style.display !== "none";
+  return q5 && getComputedStyle(q5).display !== "none";
 }
 
 /* --------------------------------------------------
@@ -21,60 +19,56 @@ function isOnQ5() {
 function computeScore() {
   let score = 0;
 
-  // Q2 (Concept association)
   if (window.answers.q2 === "idea") score += 10;
-
-  // Q3 (Residency trap)
   if (window.answers.q3 === "no") score += 10;
-
-  // Q4 (Phone usage sanity check)
   if (window.answers.q4 === "yes") score += 10;
-
-  // Q5 (AI text validation)
   if (validateQ5(window.answers.q5)) score += 10;
 
   return score;
 }
 
 /* --------------------------------------------------
-   Q5 NLP VALIDATION
+   Q5 SEMANTIC VALIDATION
 -------------------------------------------------- */
 function validateQ5(text) {
   if (!text) return false;
 
   text = text.trim();
 
-  // Must be a full sentence
   if (text.length < 25) return false;
   if (!/[.!?]$/.test(text)) return false;
 
   const pets = [
-    "dog", "cat", "puppy", "kitten", "rabbit",
-    "bird", "parrot", "fish", "hamster"
+    "dog","cat","puppy","kitten","rabbit",
+    "bird","parrot","fish","hamster"
   ];
 
   const reasons = [
-    "because", "they are", "they're", "people like",
-    "friendly", "loyal", "loving", "cute", "companionship"
+    "because","they are","they're","people like",
+    "friendly","loyal","loving","cute","companionship"
   ];
 
   const t = text.toLowerCase();
 
-  const hasPet = pets.some(p => t.includes(p));
-  const hasReason = reasons.some(r => t.includes(r));
-
-  return hasPet && hasReason;
+  return (
+    pets.some(p => t.includes(p)) &&
+    reasons.some(r => t.includes(r))
+  );
 }
 
 /* --------------------------------------------------
-   FINAL SUBMIT HANDLER (Q5 ONLY)
+   HARD EVENT INTERCEPTOR (CAPTURE PHASE)
 -------------------------------------------------- */
 document.addEventListener("click", function (e) {
 
-  if (!e.target.matches("#nextBtn")) return;
+  const btn = e.target.closest("#nextBtn");
+  if (!btn) return;
 
-  // CRITICAL FIX — only fire on Q5
+  // CRITICAL: Only act on Q5
   if (!isOnQ5()) return;
+
+  e.preventDefault();
+  e.stopImmediatePropagation();
 
   const score = computeScore();
   const verdict = score >= 30 ? "human" : "bot";
@@ -84,6 +78,6 @@ document.addEventListener("click", function (e) {
     "?bf_result=" + verdict +
     "&bf_score=" + score;
 
-  window.location.href = redirectURL;
-});
+  window.location.replace(redirectURL);
 
+}, true); // <-- CAPTURE MODE
