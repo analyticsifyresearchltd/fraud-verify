@@ -3,7 +3,17 @@ function getReturnURL() {
   return params.get("return");
 }
 
-document.getElementById("nextBtn").addEventListener("click", () => {
+function isOnQ5() {
+  const q5 = document.getElementById("q5-page");
+  return q5 && q5.style.display !== "none";
+}
+
+document.addEventListener("click", function (e) {
+
+  if (!e.target.matches("#nextBtn")) return;
+
+  // Only fire on FINAL page (Q5)
+  if (!isOnQ5()) return;
 
   const score = computeScore();
   const verdict = score >= 30 ? "human" : "bot";
@@ -11,7 +21,7 @@ document.getElementById("nextBtn").addEventListener("click", () => {
   const returnURL = getReturnURL();
 
   if (!returnURL) {
-    alert("Return URL missing.");
+    alert("Return URL missing");
     return;
   }
 
