@@ -1,17 +1,26 @@
-const FINAL_RETURN =
- "https://au.focusvision.com/survey/selfserve/6a7/260103?state=31c88fbe-e3ee-4952-8ec8-5a77f3ecb288#?";
+function getReturnURL() {
+  const params = new URLSearchParams(window.location.search);
+  return params.get("return");
+}
 
 document.getElementById("nextBtn").addEventListener("click", () => {
 
   const score = computeScore();
   const verdict = score >= 30 ? "human" : "bot";
 
-  const url =
-    FINAL_RETURN +
+  const returnURL = getReturnURL();
+
+  if (!returnURL) {
+    alert("Return URL missing.");
+    return;
+  }
+
+  const redirectURL =
+    returnURL +
     "&bf_result=" + verdict +
     "&bf_score=" + score +
     "&bf_vpn=" + vpnScore +
     "&bf_fp=" + (window.fp || "na");
 
-  window.location.href = url;
+  window.location.href = redirectURL;
 });
