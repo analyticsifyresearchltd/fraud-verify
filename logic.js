@@ -1,0 +1,6 @@
+window.humanAnswers = {
+  q2: null,
+  q3: null,
+  q4: null,
+  q5: null
+};
