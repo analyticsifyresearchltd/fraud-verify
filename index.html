@@ -96,12 +96,31 @@ function ans(q,v){
 }
 </script>
 
+<script>
+document.querySelectorAll('input[name="q2"]').forEach(el=>{
+  el.onchange = e => humanAnswers.q2 = e.target.value.toLowerCase();
+});
+document.querySelectorAll('input[name="q3"]').forEach(el=>{
+  el.onchange = e => humanAnswers.q3 = e.target.value.toLowerCase();
+});
+document.querySelectorAll('input[name="q4"]').forEach(el=>{
+  el.onchange = e => humanAnswers.q4 = e.target.value.toLowerCase();
+});
+document.getElementById("q5").oninput = e=>{
+  humanAnswers.q5 = e.target.value.trim();
+};
+</script>
+
+
 <script src="fraud.js"></script>
 <script src="vpn.js"></script>
 <script src="fingerprint.js"></script>
+<script src="logic.js"></script>
+<script src="semantic.js"></script>
 <script src="score.js"></script>
 <script src="redirect.js"></script>
 
 </body>
 </html>
+
 
