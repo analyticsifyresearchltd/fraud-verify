@@ -1,21 +1,13 @@
-function validateQ5Semantic(text) {
-  if (!text) return false;
+function semanticScore(text){
+ text = text.toLowerCase().trim()
 
-  const t = text.toLowerCase();
+ if(text.length < 20) return 0
+ if(!text.includes(".")) return 0
 
-  const pets = ["dog","cat","parrot","rabbit","hamster","fish","bird","turtle"];
-  const reasons = ["like","love","friendly","loyal","cute","playful","affection","companionship","fun","protect","comfort"];
+ const pets = ["dog","cat","fish","bird","rabbit","hamster"]
 
-  const petFound = pets.some(p => t.includes(p));
-  const reasonFound = reasons.some(r => t.includes(r));
+ let found = pets.some(p => text.includes(p))
+ if(!found) return 0
 
-  const wordCount = text.trim().split(/\s+/).length;
-  const sentenceCount = text.split(/[.!?]/).filter(s => s.trim().length > 5).length;
-
-  if (!petFound) return false;
-  if (!reasonFound) return false;
-  if (wordCount < 8) return false;
-  if (sentenceCount < 1) return false;
-
-  return true;
+ return 20
 }
