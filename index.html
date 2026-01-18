@@ -1,75 +1,150 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-<meta charset="UTF-8">
+<meta charset="utf-8">
 <title>Verification</title>
-<link rel="stylesheet" href="style.css">
+
+<style>
+body{font-family:Arial;margin:40px}
+.q{display:none}
+.option{padding:10px;border:1px solid #ccc;margin:5px;cursor:pointer}
+.option:hover{background:#eef}
+input,textarea{width:100%;padding:10px;font-size:16px}
+</style>
 </head>
 
 <body>
 
-<div class="dv-card">
-
-  <!-- Q1 -->
-  <div class="question-page">
-    <h2>Instructions</h2>
-    <p>
-      The next few questions ask about your knowledge of the world,
-      and your understanding of words.
-    </p>
-    <p>
-      For each question, please pick the answer that seems most correct to you.
-    </p>
-    <button id="nextBtn">Continue</button>
-  </div>
-
-  <!-- Q2 -->
-  <div class="question-page" style="display:none;">
-    <h2>Q2</h2>
-    <p>Concept is most associated with</p>
-
-    <div class="dv-option" onclick="selectQ2('rim')">rim</div>
-    <div class="dv-option" onclick="selectQ2('hunter')">hunter</div>
-    <div class="dv-option" onclick="selectQ2('idea')">idea</div>
-    <div class="dv-option" onclick="selectQ2('ridge')">ridge</div>
-  </div>
-
-  <!-- Q3 -->
-  <div class="question-page" style="display:none;">
-    <h2>Q3</h2>
-    <p>Are you a current resident of Beach Hill, Nebraska?</p>
-
-    <div class="dv-option" onclick="selectQ3('yes')">Yes</div>
-    <div class="dv-option" onclick="selectQ3('no')">No</div>
-  </div>
-
-  <!-- Q4 -->
-  <div class="question-page" style="display:none;">
-    <h2>Q4</h2>
-    <p>Have you ever used a phone to call someone?</p>
-
-    <div class="dv-option" onclick="selectQ4('yes')">Yes</div>
-    <div class="dv-option" onclick="selectQ4('no')">No</div>
-    <div class="dv-option" onclick="selectQ4('unsure')">Unsure</div>
-    <div class="dv-option" onclick="selectQ4('definitely not')">Definitely Not</div>
-  </div>
-
-  <!-- Q5 -->
-  <div id="q5-page" class="question-page" style="display:none;">
-    <h2>Q5</h2>
-    <p>
-      In at least one full sentence, please name a common household pet,
-      and describe why people like them.
-    </p>
-
-    <textarea id="q5text" class="dv-textarea"></textarea>
-
-    <button id="nextBtn">Next</button>
-  </div>
-
+<div id="q1" class="q" style="display:block">
+<h3>Instructions</h3>
+<p>
+The next few questions ask about your knowledge of the world, and your understanding of words.
+<br><br>
+For each question, please pick the answer that seems most correct to you.
+</p>
+<button id="nextBtn" onclick="next(2)">Continue</button>
 </div>
 
-<script src="logic.js"></script>
-<script src="redirect.js"></script>
+<div id="q2" class="q">
+<h3>Concept is most associated with</h3>
+<div class="option" onclick="answer('q2','rim')">rim</div>
+<div class="option" onclick="answer('q2','hunter')">hunter</div>
+<div class="option" onclick="answer('q2','idea')">idea</div>
+<div class="option" onclick="answer('q2','ridge')">ridge</div>
+</div>
+
+<div id="q3" class="q">
+<h3>Are you a current resident of Beach Hill, Nebraska?</h3>
+<div class="option" onclick="answer('q3','yes')">Yes</div>
+<div class="option" onclick="answer('q3','no')">No</div>
+</div>
+
+<div id="q4" class="q">
+<h3>Have you ever used a phone to call someone?</h3>
+<div class="option" onclick="answer('q4','yes')">Yes</div>
+<div class="option" onclick="answer('q4','no')">No</div>
+<div class="option" onclick="answer('q4','unsure')">Unsure</div>
+<div class="option" onclick="answer('q4','defnot')">Definitely Not</div>
+</div>
+
+<!-- Q5 MUST HAVE ID q5 -->
+<div id="q5" class="q">
+<h3>
+In at least one full sentence, please name a common household pet,
+and describe why people like them.
+</h3>
+<textarea id="pet" placeholder="Type your answer and press Enter"></textarea>
+<br><br>
+<button id="nextBtn">Next</button>
+</div>
+
+<script>
+/* --------------------------------------------------
+   STATE
+-------------------------------------------------- */
+let answers = {};
+
+/* --------------------------------------------------
+   PAGE CONTROL
+-------------------------------------------------- */
+function next(n){
+ document.querySelectorAll('.q').forEach(x=>x.style.display="none");
+ document.getElementById("q"+n).style.display="block";
+}
+
+function answer(q,v){
+ answers[q]=v.toLowerCase();
+ next(parseInt(q.substring(1))+1);
+}
+
+/* --------------------------------------------------
+   CAPTURE Q5 TEXT
+-------------------------------------------------- */
+document.getElementById("pet").addEventListener("keydown", e=>{
+ if(e.key==="Enter"){
+   e.preventDefault();
+   answers.q5 = e.target.value.trim();
+ }
+});
+
+/* --------------------------------------------------
+   SCORING ENGINE
+-------------------------------------------------- */
+function validateQ5(text){
+ if(!text) return false;
+ if(text.length < 25) return false;
+ if(!/[.!?]$/.test(text)) return false;
+
+ const pets = ["dog","cat","puppy","kitten","rabbit","bird","fish","hamster"];
+ const reasons = ["because","they are","friendly","loving","loyal","cute","companionship"];
+
+ const t = text.toLowerCase();
+ return pets.some(p=>t.includes(p)) && reasons.some(r=>t.includes(r));
+}
+
+function computeScore(){
+ let s = 0;
+ if(answers.q2 === "idea") s += 10;
+ if(answers.q3 === "no") s += 10;
+ if(answers.q4 === "yes") s += 10;
+ if(validateQ5(answers.q5)) s += 10;
+ return s;
+}
+
+/* --------------------------------------------------
+   FINAL REDIRECT (Q5 ONLY — HARDENED)
+-------------------------------------------------- */
+const SURVEY_URL =
+ "https://au.focusvision.com/survey/selfserve/6a7/260103";
+
+function isOnQ5(){
+ const q5 = document.getElementById("q5");
+ return q5 && getComputedStyle(q5).display !== "none";
+}
+
+document.addEventListener("click", function(e){
+
+ const btn = e.target.closest("#nextBtn");
+ if(!btn) return;
+
+ // ABSOLUTE GATE — only on Q5
+ if(!isOnQ5()) return;
+
+ e.preventDefault();
+ e.stopImmediatePropagation();
+
+ const score = computeScore();
+ const verdict = score >= 30 ? "human" : "bot";
+
+ const url =
+  SURVEY_URL +
+  "?bf_result=" + verdict +
+  "&bf_score=" + score;
+
+ window.location.replace(url);
+
+}, true);
+</script>
+
 </body>
 </html>
