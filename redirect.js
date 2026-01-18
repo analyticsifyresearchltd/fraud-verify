@@ -1,11 +1,17 @@
-function finalizeRedirect(){
+const FINAL_RETURN =
+ "https://au.focusvision.com/survey/selfserve/6a7/260103?";
 
- let status = (window.finalScore >= 70) ? "PASS" : "FAIL"
+document.getElementById("nextBtn").addEventListener("click", () => {
 
- let url = "https://au.focusvision.com/survey/selfserve/6a7/260103?"
- url += "FraudScore=" + window.finalScore
- url += "&FraudStatus=" + status
- url += "&Fingerprint=" + encodeURIComponent(window.fp)
+  const score = computeScore();
+  const verdict = score >= 30 ? "human" : "bot";
 
- window.location.href = url
-}
+  const url =
+    FINAL_RETURN +
+    "&bf_result=" + verdict +
+    "&bf_score=" + score +
+    "&bf_vpn=" + vpnScore +
+    "&bf_fp=" + (window.fp || "na");
+
+  window.location.href = url;
+});
