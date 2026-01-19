@@ -1,9 +1,7 @@
-function ruleScore(a){
- let score = 0
+window.logicScore = 0;
 
- if(a.q2 === "idea") score += 30
- if(a.q3 === "no") score += 30
- if(a.q4 === "yes") score += 20
-
- return score
+function logicCheck(){
+  if(humanAnswers.q2==="idea") logicScore+=10;
+  if(humanAnswers.q3==="no") logicScore+=10;
+  if(humanAnswers.q4==="yes") logicScore+=10;
 }
