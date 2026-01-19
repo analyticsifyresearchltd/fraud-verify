@@ -1,17 +1,26 @@
-const FINAL_RETURN =
- "https://au.focusvision.com/survey/selfserve/6a7/260103?";
+const SURVEY =
+ "https://au.focusvision.com/survey/selfserve/6a7/260103";
 
-document.getElementById("nextBtn").addEventListener("click", () => {
+function onQ5(){
+  const q=document.getElementById("q5-page");
+  return q && getComputedStyle(q).display!=="none";
+}
 
-  const score = computeScore();
-  const verdict = score >= 30 ? "human" : "bot";
+document.addEventListener("click",function(e){
+  const btn=e.target.closest("#nextBtn");
+  if(!btn || !onQ5()) return;
+
+  e.preventDefault();
+  e.stopImmediatePropagation();
+
+  const score = computeFraudScore();
+  const status = score>=25 ? "PASS":"FAIL";
 
   const url =
-    FINAL_RETURN +
-    "&bf_result=" + verdict +
-    "&bf_score=" + score +
-    "&bf_vpn=" + vpnScore +
-    "&bf_fp=" + (window.fp || "na");
+    SURVEY +
+    "?FraudScore="+score+
+    "&FraudStatus="+status+
+    "&Fingerprint="+deviceFP;
 
-  window.location.href = url;
-});
+  location.replace(url);
+}, true);
